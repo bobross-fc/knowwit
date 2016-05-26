@@ -47,12 +47,8 @@ def run(infile, outfile):
 			rss_tup = rss_tuple(domain=url, link=link, author=author)
 			out_rss_list.append(rss_tup)
 
-	for rss_tup in out_rss_list:
-		print ('''\
-		       Author: {auth}
-		       Domain: {url_d}
-		       Link: {url_l}
-		       \n'''.format(auth=rss_tup.author, url_d=rss_tup.domain, url_l=rss_tup.link))
+	with open(outfile, 'wb') as f_writer:
+		json.dump(out_rss_list, f_writer)
 
 if __name__ == '__main__': 
 	infile = './src_sites.lst'
