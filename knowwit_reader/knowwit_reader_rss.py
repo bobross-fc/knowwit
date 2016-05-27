@@ -47,7 +47,7 @@ def run(infile, outfile):
 			rss_tup = rss_tuple(domain=url, link=link, author=author)
 			out_rss_list.append(rss_tup)
 
-	with open(outfile, 'wb') as f_writer:
+	with open(outfile, 'w', encoding='utf8') as f_writer:
 		json.dump(out_rss_list, f_writer)
 
 if __name__ == '__main__': 
