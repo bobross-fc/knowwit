@@ -6,44 +6,25 @@ import json
 import praw
 from src import utils
 
-praw_tuple = namedtuple('praw_tuple', 'username password user_agent')  # container for praw login data
+KNOWWIT_USER = 'mail_carrier'
+KNOWWIT_USER_AGENT = 'special delivery'
+
+class KnowwitConnection(object):
+	"""docstring for KnowwitConnection"""
+	def __init__(self, knowwit_user, knowwit_user_agent):
+		super(KnowwitConnection, self).__init__()
+		self.knowwit_user = knowwit_user
+		self.knowwit_user_agent = knowwit_user_agent
+
+		self._knowwit_inst = praw.Reddit(user_agent=self.knowwit_user_agent, site_name=self.knowwit_user)
 
 
-def get_praw_config(config_filename):
-	try:
-		config = configparser.ConfigParser()
-		config.read(config_filename)
-		if 'credentials' in config:
-			config_creds = config['credentials']  # just saving typing by creating config_creds
-		else:
-			raise Exception('Now \'credentials\' section found in {}'.format(config_filename))
-
-		if 'username' in config_creds:
-			username = config_creds['username']
-		else:
-			raise Exception('Config missing needed option: {}'.format('username'))
-		
-		if 'password' in config_creds:
-			password = config_creds['password']
-		else:
-			raise Exception('Config missing needed option: {}'.format('password'))
-		
-
-		if 'user_agent' in config_creds:
-			user_agent = config_creds['user_agent']
-		else:
-			raise Exception('Config missing needed option: {}'.format('user_agent'))
-	except Exception as e:
-		raise e
-	else:
-		ret_praw_tup = praw_tuple(username=username, password=password, user_agent=user_agent)
-		return ret_praw_tup
-
-
-def run(to_read_filename, knowwit_conf_filename, nicknames_filename):
-	mail_carrier_praw = get_praw_config(knowwit_conf_filename)
-	print ('Received {} {} {}'.format(mail_carrier_praw.username, mail_carrier_praw.password, mail_carrier_praw.user_agent))
+def run(to_read_filename, knowwit_user=KNOWWIT_USER, knowwit_user_agent=KNOWWIT_USER_AGENT):
+	knowwit_connection = praw.Reddit(user_agent=knowwit_user_agent, site_name=knowwit_user)
+	knowwit_connection.login('happy_trees', 'Happy.Trees.420')
+	knowwit_connection.send_message('mail_carrier', 'Here come dat boi', 'oh shit wuddup')
+	
 
 
 if __name__ == '__main__':
-	run(to_read_filename='./downloaded_sites.json', nicknames_filename='./nicknames.json', knowwit_conf_filename='./mail_carrier.conf')
+	run(to_read_filename='./downloaded_sites.json', knowwit_user='happy_trees', knowwit_user_agent='Happy Trees Mail Reader' )
